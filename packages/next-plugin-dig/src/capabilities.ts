@@ -55,7 +55,9 @@ export function capabilities(): PluginCapabilities {
     features: ["dev-wallet-shim", "publish-deploy"],
     exportDir: NEXT_EXPORT_DIR,
     errorCodes: Object.values(DIG_ADAPTER_ERROR_CODES),
-    docs: "https://docs.dig.net/docs/build/next-adapter",
+    // The canonical app-developer landing on docs.dig.net (the audience this adapter serves: build,
+    // preview, and deploy a frontend to a capsule). Verified to resolve against the live docs routes.
+    docs: "https://docs.dig.net/docs/audiences/app-developers",
   };
 }
 

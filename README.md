@@ -19,7 +19,7 @@ Both do the same two things, the way each framework expects:
    an extension. The shim guards on a real wallet (so the DIG Browser always wins) and refuses to
    fake a signature, so a dev is never misled.
 2. **Publish to a capsule.** A `digDeploy()` you call from a `publish` script ships your **built**
-   output to a DIG **capsule** via `digstore deploy`, printing the `chia://` / DIGHub URL. Publishing
+   output to a DIG **capsule** via `digstore deploy`, printing the `chia://` / DIGHUb URL. Publishing
    spends **$DIG**, so it is a deliberate, credentialed step — never part of the default build.
 
 > **Concepts.** A **store** is your app's on-chain identity; a **capsule** (`storeId:rootHash`) is
@@ -36,13 +36,13 @@ These adapters are **thin**. All the heavy lifting lives in two places they comp
   `dependency`, so installing an adapter pulls the SDK in for you.
 - **[`digstore`](https://docs.dig.net/docs/)** — the canonical deployer. `digDeploy()` shells out to
   `digstore deploy --json`, which advances the on-chain root, stages your build dir, and pushes the
-  new capsule to DIGHub. **The adapters never hand-roll a deploy or a spend.**
+  new capsule to DIGHUb. **The adapters never hand-roll a deploy or a spend.**
 
 ```
 your app  ──vite build / next build──▶  out dir
                                           │  digDeploy()  (publish script)
                                           ▼
-                              digstore deploy --json  ──▶  new capsule  ──▶  chia:// + DIGHub URL
+                              digstore deploy --json  ──▶  new capsule  ──▶  chia:// + DIGHUb URL
 ```
 
 Config (`store-id`, `output-dir`, `build-command`, `message`, `network`, `remote`, `wait-timeout`)

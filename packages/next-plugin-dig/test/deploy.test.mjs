@@ -12,7 +12,10 @@ import { digDeploy } from "../dist/index.js";
 
 const STORE = "ab".repeat(32);
 const ROOT = "cd".repeat(32);
+const CHIA_URL = `chia://${STORE}:${ROOT}/`;
 
+// Simulate the CURRENTLY-PUBLISHED SDK runner (still a dig:// digUrl, no chiaUrl); the adapter must
+// normalize the user-facing open URL to the canonical chia://<store>:<root>/ on the way out.
 function fakeResult() {
   return {
     capsule: `${STORE}:${ROOT}`,
@@ -37,7 +40,10 @@ test("digDeploy: defaults outputDir to Next's export dir (out) and stages withou
   assert.equal(received.skipBuild, true, "the adapter built — digstore stages, not rebuilds");
   assert.equal(received.message, "from next");
   assert.equal(result.capsule, `${STORE}:${ROOT}`);
-  assert.equal(result.digUrl, `dig://${STORE}`);
+  // The user-facing content-open URL is chia://<store>:<root>/ (SYSTEM.md canon), surfaced as chiaUrl;
+  // digUrl is a deprecated alias carrying the SAME chia:// value.
+  assert.equal(result.chiaUrl, CHIA_URL, "chiaUrl is the canonical chia:// content-open address");
+  assert.equal(result.digUrl, CHIA_URL, "digUrl is a back-compat alias of the chia:// value");
 });
 
 test("digDeploy: an explicit outputDir overrides the out default", async () => {
