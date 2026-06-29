@@ -10,7 +10,7 @@ It does two things:
    production — so you can develop the wallet path without the **DIG Browser** or an extension. The
    shim guards on a real wallet (the DIG Browser always wins) and never fakes a signature.
 2. **Publish to a capsule.** `digDeploy()` ships your **built** site to a DIG capsule via
-   `digstore deploy`, printing the `chia://` / DIGHub URL. Publishing spends **$DIG**, so it is a
+   `digstore deploy`, printing the `chia://` / DIGHUb URL. Publishing spends **$DIG**, so it is a
    deliberate `publish` step — never part of `vite build`.
 
 ```bash
@@ -65,11 +65,12 @@ on-chain root, stage `dist/`, and push the new capsule. It returns:
 
 ```ts
 {
-  capsule: "<storeId>:<rootHash>",          // the capsule identity you can share
+  capsule: "<storeId>:<rootHash>",                  // the capsule identity you can share
   storeId: "<storeId>",
   root:    "<rootHash>",
-  digUrl:  "dig://<storeId>",               // resolves to the latest published version
-  hubUrl:  "https://hub.dig.net/stores/<storeId>",
+  chiaUrl: "chia://<storeId>:<rootHash>/",          // what a user clicks to open your verified app
+  digUrl:  "chia://<storeId>:<rootHash>/",          // @deprecated alias of chiaUrl (same value)
+  hubUrl:  "https://hub.dig.net/stores/<storeId>",  // the DIGHUb "view it" page
 }
 ```
 

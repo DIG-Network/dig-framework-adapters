@@ -12,7 +12,7 @@ It does two things:
    Browser** or an extension. The shim guards on a real wallet (the DIG Browser always wins) and
    never fakes a signature.
 2. **Publish to a capsule.** `digDeploy()` ships your **static export** (`out/`) to a DIG capsule via
-   `digstore deploy`, printing the `chia://` / DIGHub URL. Publishing spends **$DIG**, so it is a
+   `digstore deploy`, printing the `chia://` / DIGHUb URL. Publishing spends **$DIG**, so it is a
    deliberate `publish` step — never part of `next build`.
 
 ```bash
@@ -85,7 +85,9 @@ npm run deploy
 
 `digDeploy()` defaults `outputDir` to `out`, reads `dig.toml` + `DIGSTORE_*` env, then runs
 `digstore deploy --json` to advance the on-chain root, stage `out/`, and push the new capsule. It
-returns `{ capsule, storeId, root, digUrl, hubUrl, pushed }`.
+returns `{ capsule, storeId, root, chiaUrl, digUrl, hubUrl, pushed }` — `chiaUrl` is the
+`chia://<storeId>:<rootHash>/` address a user clicks to open the app (`digUrl` is a deprecated alias
+of the same chia:// value); `hubUrl` is the DIGHUb view page.
 
 > **Prereq:** `digstore` must be installed and on `PATH` (the canonical deployer — the adapter never
 > hand-rolls a deploy or a spend). See the [install docs](https://docs.dig.net/docs/).

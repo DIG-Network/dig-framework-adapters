@@ -25,7 +25,10 @@ test("capabilities(): describes the adapter surface for agents", () => {
   assert.equal(cap.exportDir, "out");
 });
 
-test("capabilities(): docs link uses the canonical docs.dig.net/docs path", () => {
+test("capabilities(): docs link points at a verified docs.dig.net route", () => {
   const cap = capabilities();
   assert.match(cap.docs, /^https:\/\/docs\.dig\.net\/docs\//);
+  // The app-developer landing (this adapter's audience). Pinned to the VERIFIED route so a slug can't
+  // silently drift back to a dead path (e.g. the old /docs/build/next-adapter, which does not exist).
+  assert.equal(cap.docs, "https://docs.dig.net/docs/audiences/app-developers");
 });
