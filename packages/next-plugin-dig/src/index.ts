@@ -10,7 +10,7 @@
 //      wallet (DIG Browser / extension wins) and refuses to fake a signature.
 //   2. PUBLISH: `digDeploy()` ships the static-export output (`out/` — what `next build` writes with
 //      `output: "export"`) to a DIG capsule via `digstore deploy --json`, printing the chia:// /
-//      DIGHub URL. Call it from a `publish` script AFTER the build. Deploy spends $DIG, so it is a
+//      DIGHUb URL. Call it from a `publish` script AFTER the build. Deploy spends $DIG, so it is a
 //      deliberate, credentialed step — never part of the default build.
 //
 // The adapter is intentionally thin: it composes the proven, separately-published
@@ -25,10 +25,11 @@ import {
   runDeploy,
   type DevShimOptions,
   type RunDeployOptions,
-  type DeployResult,
+  type DeployResult as SdkDeployResult,
 } from "@dignetwork/dig-sdk/adapters";
 import { toAdapterError } from "./errors.js";
 import { NEXT_EXPORT_DIR } from "./export-dir.js";
+import { normalizeDeployResult, type DeployResult } from "./deploy-result.js";
 
 export { version, capabilities, describe, type PluginCapabilities } from "./capabilities.js";
 export {
@@ -38,7 +39,10 @@ export {
   type DigAdapterErrorCode,
   type DigAdapterErrorContext,
 } from "./errors.js";
-export type { DevShimOptions, DeployResult } from "@dignetwork/dig-sdk/adapters";
+// Re-export the dev-shim options + the adapter's DeployResult (the SDK shape augmented with the
+// canonical `chiaUrl` content-open field) so consumers get the full typed surface.
+export type { DevShimOptions } from "@dignetwork/dig-sdk/adapters";
+export type { DeployResult } from "./deploy-result.js";
 
 /**
  * The raw dev-shim script BODY (no surrounding `<script>` tags) — for callers that inject it
@@ -73,7 +77,7 @@ export interface DigDeployOptions extends RunDeployOptions {}
 /** Test/extension seam: the function {@link digDeploy} delegates the actual deploy to. */
 export interface DigDeployDeps {
   /** Override the deploy runner (defaults to the SDK's `runDeploy`). Used to test the wiring. */
-  runner?: (opts: RunDeployOptions) => Promise<DeployResult>;
+  runner?: (opts: RunDeployOptions) => Promise<SdkDeployResult>;
 }
 
 /**
@@ -93,7 +97,9 @@ export interface DigDeployDeps {
  * `digstore` stages the existing `out/` rather than rebuilding. On failure it throws a coded
  * {@link DigAdapterError} (branch on `.code`).
  *
- * @returns the parsed {@link DeployResult} (`capsule` = `storeId:rootHash`, `digUrl`, `hubUrl`).
+ * @returns the parsed {@link DeployResult} — `capsule` = `storeId:rootHash`, `chiaUrl` = the
+ * user-facing `chia://<storeId>:<rootHash>/` content-open address (`digUrl` is a deprecated alias of
+ * the same chia:// value), and `hubUrl` = the DIGHUb view URL.
  */
 export async function digDeploy(
   options: DigDeployOptions = {},
@@ -101,13 +107,15 @@ export async function digDeploy(
 ): Promise<DeployResult> {
   const run = deps.runner ?? runDeploy;
   try {
-    return await run({
+    const result = await run({
       ...options,
       // Default to Next's export dir; an explicit outputDir (from options/env/dig.toml) wins.
       outputDir: options.outputDir ?? NEXT_EXPORT_DIR,
       // The adapter ran `next build` already — stage the existing out/, don't rebuild.
       skipBuild: true,
     });
+    // Guarantee the user-facing open URL is chia:// (chiaUrl) — digUrl stays as its deprecated alias.
+    return normalizeDeployResult(result);
   } catch (e) {
     throw toAdapterError(e);
   }

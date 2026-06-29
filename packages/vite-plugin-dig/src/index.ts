@@ -8,7 +8,7 @@
 //      extension always wins, and it refuses to fake a signature (a dev stub must never mislead).
 //   2. PUBLISH: it exposes `digDeploy()` — call it from a `publish` script (after `vite build`) to
 //      ship the build output to a DIG capsule via `digstore deploy --json`, printing the chia:// /
-//      DIGHub URL. Deploy is a deliberate, credentialed step (it spends $DIG), so it is NOT wired
+//      DIGHUb URL. Deploy is a deliberate, credentialed step (it spends $DIG), so it is NOT wired
 //      into the default `vite build`; you opt in via a `publish` script.
 //
 // The plugin is intentionally thin: it composes the proven, separately-published
@@ -27,9 +27,10 @@ import {
   runDeploy,
   type DevShimOptions,
   type RunDeployOptions,
-  type DeployResult,
+  type DeployResult as SdkDeployResult,
 } from "@dignetwork/dig-sdk/adapters";
 import { toAdapterError } from "./errors.js";
+import { normalizeDeployResult, type DeployResult } from "./deploy-result.js";
 
 export { version, capabilities, describe, type PluginCapabilities } from "./capabilities.js";
 export {
@@ -39,8 +40,10 @@ export {
   type DigAdapterErrorCode,
   type DigAdapterErrorContext,
 } from "./errors.js";
-// Re-export the deploy result + dev-shim option types so consumers get the full typed surface.
-export type { DevShimOptions, DeployResult } from "@dignetwork/dig-sdk/adapters";
+// Re-export the dev-shim options + the adapter's DeployResult (the SDK shape augmented with the
+// canonical `chiaUrl` content-open field) so consumers get the full typed surface.
+export type { DevShimOptions } from "@dignetwork/dig-sdk/adapters";
+export type { DeployResult } from "./deploy-result.js";
 
 /** Options for {@link digVite}. */
 export interface DigVitePluginOptions {
@@ -101,7 +104,7 @@ export interface DigDeployOptions extends RunDeployOptions {}
 /** Test/extension seam: the function {@link digDeploy} delegates the actual deploy to. */
 export interface DigDeployDeps {
   /** Override the deploy runner (defaults to the SDK's `runDeploy`). Used to test the wiring. */
-  runner?: (opts: RunDeployOptions) => Promise<DeployResult>;
+  runner?: (opts: RunDeployOptions) => Promise<SdkDeployResult>;
 }
 
 /**
@@ -119,7 +122,9 @@ export interface DigDeployDeps {
  * already built, so it tells `digstore` to stage the existing output dir rather than rebuild. On
  * failure it throws a coded {@link DigAdapterError} (branch on `.code`).
  *
- * @returns the parsed {@link DeployResult} (`capsule` = `storeId:rootHash`, `digUrl`, `hubUrl`).
+ * @returns the parsed {@link DeployResult} — `capsule` = `storeId:rootHash`, `chiaUrl` = the
+ * user-facing `chia://<storeId>:<rootHash>/` content-open address (`digUrl` is a deprecated alias of
+ * the same chia:// value), and `hubUrl` = the DIGHUb view URL.
  */
 export async function digDeploy(
   options: DigDeployOptions = {},
@@ -128,7 +133,9 @@ export async function digDeploy(
   const run = deps.runner ?? runDeploy;
   try {
     // The adapter ran `vite build` already — stage the existing output dir, don't rebuild.
-    return await run({ ...options, skipBuild: true });
+    const result = await run({ ...options, skipBuild: true });
+    // Guarantee the user-facing open URL is chia:// (chiaUrl) — digUrl stays as its deprecated alias.
+    return normalizeDeployResult(result);
   } catch (e) {
     throw toAdapterError(e);
   }
