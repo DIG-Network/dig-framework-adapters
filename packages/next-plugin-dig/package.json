@@ -54,7 +54,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@dignetwork/dig-sdk": "^0.1.0"
+    "@dignetwork/dig-sdk": "^0.2.0"
   },
   "peerDependencies": {
     "next": ">=13"
