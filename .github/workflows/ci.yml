@@ -31,5 +31,7 @@ jobs:
         run: npm run typecheck
       - name: build (ESM + CJS + d.ts, both packages)
         run: npm run build
-      - name: unit tests (node --test, both packages)
-        run: npm test
+      - name: unit tests + coverage gate (>=80%, both packages)
+        # c8 enforces the >=80% lines/branches/functions/statements thresholds
+        # (each package's .c8rc.json, check-coverage: true) — a build below the floor FAILS.
+        run: npm run test:coverage

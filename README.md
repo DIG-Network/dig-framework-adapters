@@ -78,14 +78,19 @@ Both packages are built for automated consumers as well as humans:
 ## Develop
 
 ```bash
-npm install          # installs both workspaces
-npm run build        # build both packages (ESM + CJS + .d.ts)
-npm test             # build + run node:test for both
-npm run verify       # typecheck + build + test
+npm install            # installs both workspaces
+npm run build          # build both packages (ESM + CJS + .d.ts)
+npm test               # build + run node:test for both
+npm run test:coverage  # build + run tests under c8 (CI-gated at >=80%)
+npm run verify         # typecheck + build + test
 ```
 
 Each package builds with **tsup** to ESM + CJS + `.d.ts`, is **eval-free** (CSP-safe), and runs on
-**Node 18+**.
+**Node 18+**. Coverage is measured with **c8** over the built output (mapped back to `src`) and is
+**CI-gated at ≥80%** per package (`.c8rc.json`).
+
+The authoritative contract for both packages — public API, config resolution, the deploy hand-off,
+the `DeployResult` shape, and the error taxonomy — is in [**`SPEC.md`**](SPEC.md).
 
 ## License
 
