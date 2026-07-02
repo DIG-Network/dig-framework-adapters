@@ -46,6 +46,24 @@ test("digDeploy: defaults outputDir to Next's export dir (out) and stages withou
   assert.equal(result.digUrl, CHIA_URL, "digUrl is a back-compat alias of the chia:// value");
 });
 
+test("digDeploy: prefers a chiaUrl the SDK already provides (forward-compat with the new SDK)", async () => {
+  // The new SDK already returns chiaUrl=chia://…/ and digUrl aliased to it; the adapter must pass that
+  // through unchanged (normalization is idempotent), not re-derive a different value.
+  const fakeRunner = async () => ({
+    capsule: `${STORE}:${ROOT}`,
+    storeId: STORE,
+    root: ROOT,
+    chiaUrl: CHIA_URL,
+    digUrl: CHIA_URL,
+    hubUrl: `https://hub.dig.net/stores/${STORE}`,
+    pushed: true,
+  });
+
+  const result = await digDeploy({}, { runner: fakeRunner });
+  assert.equal(result.chiaUrl, CHIA_URL, "an SDK-supplied chiaUrl passes through unchanged");
+  assert.equal(result.digUrl, CHIA_URL, "digUrl stays the same chia:// alias");
+});
+
 test("digDeploy: an explicit outputDir overrides the out default", async () => {
   let received;
   const fakeRunner = async (opts) => {
