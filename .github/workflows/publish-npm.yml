@@ -7,6 +7,8 @@ name: publish-npm
 # when a GitHub Release is published (tag-driven), or on manual dispatch. The versions published are
 # whatever is in each package's package.json on the released commit — bump them before tagging.
 on:
+  push:
+    tags: ['v*']
   release:
     types: [published]
   workflow_dispatch: {}
