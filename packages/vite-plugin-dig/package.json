@@ -1,6 +1,6 @@
 {
   "name": "@dignetwork/vite-plugin-dig",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Vite plugin that makes DIG a first-class deploy target: injects a window.chia dev shim during `vite dev`, wires the build output to a DIG capsule via dig.toml, and ships it on publish with `digstore deploy`. Deploy to a network no host can read, change, or take down — on Chia.",
   "license": "MIT",
   "author": "DIG Network",
