@@ -1,6 +1,6 @@
 {
   "name": "@dignetwork/next-plugin-dig",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Next.js static-export adapter that makes DIG a first-class deploy target: a window.chia dev shim for `next dev`, plus a publish step that ships the static export (out/) to a DIG capsule via `digstore deploy`, honoring dig.toml. Deploy to a network no host can read, change, or take down — on Chia.",
   "license": "MIT",
   "author": "DIG Network",
