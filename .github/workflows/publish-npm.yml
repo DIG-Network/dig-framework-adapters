@@ -38,13 +38,16 @@ jobs:
           cache: npm
           registry-url: "https://registry.npmjs.org"
       - run: npm ci
-      # Trusted publishing requires npm CLI >= 11.5.1; Node 22 bundles npm 10.
-      - run: npm install -g npm@latest
-      - run: npm --version
-      # Gate the publish on a green build + tests.
+      # Gate the publish on a green build + tests (run with the npm bundled by setup-node —
+      # upgrading npm globally before this point has been observed to break the workspace
+      # test scripts' nested `npm run` invocations on Node 22 runners).
       - run: npm run typecheck
       - run: npm run build
       - run: npm test
+      # Trusted publishing requires npm CLI >= 11.5.1; Node 22 bundles npm 10. Upgrade right
+      # before publish, after build+test have already run cleanly.
+      - run: npm install -g npm@latest
+      - run: npm --version
       # Publish every workspace package (the root is private:true and is skipped).
       # OIDC trusted publishing is auto-detected; provenance is attached automatically.
       - name: publish to npmjs
