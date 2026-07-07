@@ -2,10 +2,12 @@ name: publish-npm
 
 # Build + test both packages and publish them to npmjs:
 #   @dignetwork/vite-plugin-dig  +  @dignetwork/next-plugin-dig
-# Auth uses the org-level NPM_TOKEN secret (must be granted to this repo in the org secret's
-# repository-access list) — the SAME pattern as dig-sdk's / chip35_dl_coin's publish-npm.yml. Runs
-# when a GitHub Release is published (tag-driven), or on manual dispatch. The versions published are
-# whatever is in each package's package.json on the released commit — bump them before tagging.
+# Auth uses npm Trusted Publishing (OIDC) — no NPM_TOKEN secret. npm exchanges this workflow's
+# GitHub Actions OIDC token for a short-lived publish token automatically; the npm-side trusted
+# publisher must be configured for org DIG-Network, repo dig-framework-adapters, workflow
+# publish-npm.yml. Runs when a GitHub Release is published (tag-driven), or on manual dispatch.
+# The versions published are whatever is in each package's package.json on the released commit —
+# bump them before tagging.
 on:
   push:
     tags: ['v*']
@@ -20,6 +22,7 @@ concurrency:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   publish:
@@ -31,16 +34,18 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: 20
+          node-version: "22"
           cache: npm
           registry-url: "https://registry.npmjs.org"
       - run: npm ci
+      # Trusted publishing requires npm CLI >= 11.5.1; Node 22 bundles npm 10.
+      - run: npm install -g npm@latest
+      - run: npm --version
       # Gate the publish on a green build + tests.
       - run: npm run typecheck
       - run: npm run build
       - run: npm test
       # Publish every workspace package (the root is private:true and is skipped).
+      # OIDC trusted publishing is auto-detected; provenance is attached automatically.
       - name: publish to npmjs
         run: npm publish --workspaces --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
