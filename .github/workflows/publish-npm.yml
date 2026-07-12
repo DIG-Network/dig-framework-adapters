@@ -1,7 +1,13 @@
 name: publish-npm
 
-# Build + test both packages and publish them to npmjs:
+# Build + publish both packages to npmjs:
 #   @dignetwork/vite-plugin-dig  +  @dignetwork/next-plugin-dig
+# Deploy = build + package + publish ONLY (CLAUDE.md #489/#488): the PR release gates (ci.yml)
+# already ran typecheck/build/the full test suite + coverage against this exact merged tree —
+# re-running the test suite here is redundant AND a pure flake-exposure surface that can block an
+# already-green-tested release on a tag-path re-run (the #488 class of failure). Keep typecheck
+# here since it is a fast, deterministic compile-time check (not a flaky-test surface) and gates
+# the build tsup relies on.
 # Auth uses npm Trusted Publishing (OIDC) — no NPM_TOKEN secret. npm exchanges this workflow's
 # GitHub Actions OIDC token for a short-lived publish token automatically; the npm-side trusted
 # publisher must be configured for org DIG-Network, repo dig-framework-adapters, workflow
@@ -26,7 +32,7 @@ permissions:
 
 jobs:
   publish:
-    name: build + test + npm publish (both packages)
+    name: build + npm publish (both packages)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -38,14 +44,14 @@ jobs:
           cache: npm
           registry-url: "https://registry.npmjs.org"
       - run: npm ci
-      # Gate the publish on a green build + tests (run with the npm bundled by setup-node —
+      # Gate the publish on a green typecheck + build (run with the npm bundled by setup-node —
       # upgrading npm globally before this point has been observed to break the workspace
-      # test scripts' nested `npm run` invocations on Node 22 runners).
+      # scripts' nested `npm run` invocations on Node 22 runners). The full test suite is NOT
+      # re-run here — the PR's ci.yml gate already tested this exact merged tree (#489).
       - run: npm run typecheck
       - run: npm run build
-      - run: npm test
       # Trusted publishing requires npm CLI >= 11.5.1; Node 22 bundles npm 10. Upgrade right
-      # before publish, after build+test have already run cleanly.
+      # before publish, after typecheck+build have already run cleanly.
       - run: npm install -g npm@latest
       - run: npm --version
       # Publish every workspace package (the root is private:true and is skipped).
