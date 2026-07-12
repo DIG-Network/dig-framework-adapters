@@ -4,6 +4,11 @@ All notable changes to this project are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and
 [Conventional Commits](https://www.conventionalcommits.org).
 
+## [0.1.3] - 2026-07-12
+
+### CI
+- Add flaky-test management (#489) (#3)
+
 ## [0.1.2] - 2026-07-07
 
 ### CI
@@ -16,7 +21,5 @@ This project adheres to [Semantic Versioning](https://semver.org) and
 
 ### Chores
 - **changelog:** Add git-cliff config for Conventional-Commit changelog
-
-## [0.1.0] - 2026-06-30
 
 
