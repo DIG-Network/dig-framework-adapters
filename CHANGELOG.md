@@ -4,6 +4,11 @@ All notable changes to this project are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and
 [Conventional Commits](https://www.conventionalcommits.org).
 
+## [0.1.5] - 2026-07-22
+
+### Bug Fixes
+- **dig-framework-adapters:** Make test discovery portable across Node 18/20/22 (#1145)
+
 ## [0.1.4] - 2026-07-19
 
 ### Documentation
