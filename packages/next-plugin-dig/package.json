@@ -1,6 +1,6 @@
 {
   "name": "@dignetwork/next-plugin-dig",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A Next.js static-export adapter that makes DIG a first-class deploy target: a window.chia dev shim for `next dev`, plus a publish step that ships the static export (out/) to a DIG capsule via `digstore deploy`, honoring dig.toml. Deploy to a network no host can read, change, or take down — on Chia.",
   "license": "MIT",
   "author": "DIG Network",
@@ -49,8 +49,8 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "test": "npm run build && node --test test/",
-    "test:coverage": "npm run build && c8 node --test test/",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "test:coverage": "npm run build && c8 node --test test/*.test.mjs",
     "verify": "npm run typecheck && npm run build && npm test",
     "prepublishOnly": "npm run build"
   },
