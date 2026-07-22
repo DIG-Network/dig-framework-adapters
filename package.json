@@ -1,6 +1,6 @@
 {
   "name": "@dignetwork/dig-framework-adapters",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "description": "DIG framework adapters monorepo — a Vite plugin (@dignetwork/vite-plugin-dig) and a Next.js static-export adapter (@dignetwork/next-plugin-dig) that make DIG a first-class deploy target: a window.chia dev shim during dev, plus a publish step that ships the build output to a DIG capsule via digstore deploy.",
   "license": "MIT",
