@@ -104,3 +104,40 @@ jobs:
           fi
 
           exit $fail
+
+      # An npm workspace releases in lockstep: one tag publishes the root and
+      # every member package at the same version. The increment check above only
+      # inspects the ROOT package.json, so a member left behind (the PR #4 drift:
+      # root 0.1.3 while both packages were still 0.1.2) would silently publish
+      # mis-versioned npm artifacts. This step asserts every workspace member's
+      # version equals the root's, turning that drift into a red gate.
+      - name: Check workspace version agreement
+        shell: bash
+        run: |
+          set -euo pipefail
+          H=branch-repo
+
+          root=$(jq -r '.version // ""' "$H/package.json" 2>/dev/null || echo "")
+          if [ -z "$root" ]; then
+            echo "Root package.json has no version — no workspace agreement to enforce."
+            exit 0
+          fi
+
+          fail=0
+          # Expand each npm "workspaces" glob (e.g. "packages/*") to its member
+          # package.json files via shell globbing, and compare each version.
+          mapfile -t patterns < <(jq -r '.workspaces[]? // empty' "$H/package.json")
+          for pat in "${patterns[@]}"; do
+            for pkg in $H/$pat/package.json; do
+              [ -f "$pkg" ] || continue
+              v=$(jq -r '.version // ""' "$pkg")
+              [ -n "$v" ] || continue
+              if [ "$v" != "$root" ]; then
+                echo "::error::${pkg#"$H/"} version ($v) must match the root version ($root)."
+                fail=1
+              fi
+            done
+          done
+
+          [ "$fail" -eq 0 ] && echo "All workspace packages agree at version $root."
+          exit $fail
