@@ -3,7 +3,7 @@
 // "Self-describing"). The version is replaced at build time by tsup's `define` (see tsup.config.ts)
 // with package.json's value, so it can never drift from what's on npm.
 
-import { DIG_ADAPTER_ERROR_CODES, type DigAdapterErrorCode } from "./errors.js";
+import { DIG_ADAPTER_ERROR_CODES, type DigAdapterErrorCode } from "@dignetwork/dig-adapters-shared";
 
 // Injected by tsup `define` ({ __PLUGIN_VERSION__: JSON.stringify(pkg.version) }). The `declare`
 // keeps TypeScript happy; the fallback covers unbundled / test execution.

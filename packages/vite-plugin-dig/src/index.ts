@@ -29,8 +29,11 @@ import {
   type RunDeployOptions,
   type DeployResult as SdkDeployResult,
 } from "@dignetwork/dig-sdk/adapters";
-import { toAdapterError } from "./errors.js";
-import { normalizeDeployResult, type DeployResult } from "./deploy-result.js";
+import {
+  toAdapterError,
+  normalizeDeployResult,
+  type DeployResult,
+} from "@dignetwork/dig-adapters-shared";
 
 export { version, capabilities, describe, type PluginCapabilities } from "./capabilities.js";
 export {
@@ -39,11 +42,11 @@ export {
   DIG_ADAPTER_ERROR_CODES,
   type DigAdapterErrorCode,
   type DigAdapterErrorContext,
-} from "./errors.js";
+} from "@dignetwork/dig-adapters-shared";
 // Re-export the dev-shim options + the adapter's DeployResult (the SDK shape augmented with the
 // canonical `chiaUrl` content-open field) so consumers get the full typed surface.
 export type { DevShimOptions } from "@dignetwork/dig-sdk/adapters";
-export type { DeployResult } from "./deploy-result.js";
+export type { DeployResult } from "@dignetwork/dig-adapters-shared";
 
 /** Options for {@link digVite}. */
 export interface DigVitePluginOptions {

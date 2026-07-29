@@ -3,7 +3,7 @@
 // reading source (AGENT_FRIENDLY.md → "Self-describing"). The version is replaced at build time by
 // tsup's `define` (see tsup.config.ts) with package.json's value, so it can never drift from npm.
 
-import { DIG_ADAPTER_ERROR_CODES, type DigAdapterErrorCode } from "./errors.js";
+import { DIG_ADAPTER_ERROR_CODES, type DigAdapterErrorCode } from "@dignetwork/dig-adapters-shared";
 import { NEXT_EXPORT_DIR } from "./export-dir.js";
 
 // Injected by tsup `define` ({ __PLUGIN_VERSION__: JSON.stringify(pkg.version) }). The `declare`

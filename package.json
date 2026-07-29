@@ -1,6 +1,6 @@
 {
   "name": "@dignetwork/dig-framework-adapters",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": true,
   "description": "DIG framework adapters monorepo — a Vite plugin (@dignetwork/vite-plugin-dig) and a Next.js static-export adapter (@dignetwork/next-plugin-dig) that make DIG a first-class deploy target: a window.chia dev shim during dev, plus a publish step that ships the build output to a DIG capsule via digstore deploy.",
   "license": "MIT",
@@ -15,6 +15,7 @@
     "url": "https://github.com/DIG-Network/dig-framework-adapters/issues"
   },
   "workspaces": [
+    "packages/shared",
     "packages/*"
   ],
   "engines": {
@@ -25,6 +26,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "postinstall": "npm run build --workspace=packages/shared",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
