@@ -24,7 +24,7 @@ Releases are **tag-driven** (CLAUDE.md §3.6, per-merge-tag group — this is `m
    commit (loop guard).
 3. **The pushed `v*` tag** (and the GitHub Release) triggers **`publish-npm.yml`**, which runs
    `npm ci` → `npm run typecheck` → `npm run build` → upgrades npm → `npm publish --workspaces
-   --access public`. The root package is `private: true` and is skipped.
+--access public`. The root package is `private: true` and is skipped.
 
 Do **NOT** hand-push tags or hand-run `npm publish` — the workflows own tagging + publishing.
 

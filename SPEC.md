@@ -26,7 +26,7 @@ Each package performs exactly two jobs, expressed the way its framework expects:
    production.
 2. **Publish/deploy (opt-in).** Expose `digDeploy()` — called from a `publish` script AFTER the
    framework build — that ships the already-built output to a DIG capsule via `digstore deploy
-   --json`, returning the parsed capsule result.
+--json`, returning the parsed capsule result.
 
 Deploy spends **$DIG**; it MUST be a deliberate, credentialed step and MUST NOT be wired into the
 default framework build.
@@ -44,18 +44,18 @@ load with the framework absent.
 Returns a structurally-valid Vite plugin object. The returned object MUST have exactly these
 observable properties:
 
-| Property | Value | Semantics |
-|---|---|---|
-| `name` | `"dignetwork:vite-plugin-dig"` | Stable plugin id. |
-| `apply` | `"serve"` | The plugin applies to the dev server only; the dev shim is meaningless for a production build. |
-| `transformIndexHtml` | `{ order: "pre", handler }` | Injects the dev shim at the earliest HTML-transform point. |
+| Property             | Value                          | Semantics                                                                                      |
+| -------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `name`               | `"dignetwork:vite-plugin-dig"` | Stable plugin id.                                                                              |
+| `apply`              | `"serve"`                      | The plugin applies to the dev server only; the dev shim is meaningless for a production build. |
+| `transformIndexHtml` | `{ order: "pre", handler }`    | Injects the dev shim at the earliest HTML-transform point.                                     |
 
 `DigVitePluginOptions`:
 
-| Field | Type | Default | Meaning |
-|---|---|---|---|
-| `devWallet` | `boolean` | `true` | When `false`, disable shim injection entirely. |
-| `devWalletOptions` | `DevShimOptions` | `{}` | Forwarded to `devShimScript` (e.g. the mock `address`). |
+| Field              | Type             | Default | Meaning                                                 |
+| ------------------ | ---------------- | ------- | ------------------------------------------------------- |
+| `devWallet`        | `boolean`        | `true`  | When `false`, disable shim injection entirely.          |
+| `devWalletOptions` | `DevShimOptions` | `{}`    | Forwarded to `devShimScript` (e.g. the mock `address`). |
 
 `transformIndexHtml.handler(html) -> string` MUST:
 
@@ -102,8 +102,8 @@ digDeploy(options?: DigDeployOptions, deps?: DigDeployDeps): Promise<DeployResul
 `DigDeployOptions` extends the SDK `RunDeployOptions` (§4.4). `DigDeployDeps` is a test/extension
 seam:
 
-| Field | Type | Default | Meaning |
-|---|---|---|---|
+| Field    | Type                                                   | Default               | Meaning                     |
+| -------- | ------------------------------------------------------ | --------------------- | --------------------------- |
 | `runner` | `(opts: RunDeployOptions) => Promise<SdkDeployResult>` | the SDK's `runDeploy` | Override the deploy runner. |
 
 ### 4.1 Common contract
@@ -134,18 +134,18 @@ Every field the caller passes in `options` (e.g. `storeId`, `outputDir`, `cwd`, 
 
 ### 4.4 `RunDeployOptions` (from `@dignetwork/dig-sdk/adapters`)
 
-| Field | Type | Default | Meaning |
-|---|---|---|---|
-| `cwd` | `string` | `process.cwd()` | Project root holding `dig.toml` and the build output. |
-| `digstoreBin` | `string` | `"digstore"` | The digstore binary name/path to spawn. |
-| `storeId` | `string` | from `dig.toml`/env | Target store identity (64-hex). |
-| `outputDir` | `string` | see §4.2 | Directory staged into the capsule. |
-| `buildCommand` | `string` | — | Ignored on the adapter path (build already ran; `skipBuild` suppresses it). |
-| `message` | `string` | — | Commit message for the new capsule. |
-| `network` | `string` | digstore default | Chia network selector. |
-| `remote` | `string` | — | The `origin` remote to publish to (e.g. `dig://<storeId>`). |
-| `waitTimeout` | `number` | — | Seconds to wait for confirmation. |
-| `skipBuild` | `boolean` | forced `true` by the adapter | Stage the existing output dir; do not rebuild. |
+| Field          | Type      | Default                      | Meaning                                                                     |
+| -------------- | --------- | ---------------------------- | --------------------------------------------------------------------------- |
+| `cwd`          | `string`  | `process.cwd()`              | Project root holding `dig.toml` and the build output.                       |
+| `digstoreBin`  | `string`  | `"digstore"`                 | The digstore binary name/path to spawn.                                     |
+| `storeId`      | `string`  | from `dig.toml`/env          | Target store identity (64-hex).                                             |
+| `outputDir`    | `string`  | see §4.2                     | Directory staged into the capsule.                                          |
+| `buildCommand` | `string`  | —                            | Ignored on the adapter path (build already ran; `skipBuild` suppresses it). |
+| `message`      | `string`  | —                            | Commit message for the new capsule.                                         |
+| `network`      | `string`  | digstore default             | Chia network selector.                                                      |
+| `remote`       | `string`  | —                            | The `origin` remote to publish to (e.g. `dig://<storeId>`).                 |
+| `waitTimeout`  | `number`  | —                            | Seconds to wait for confirmation.                                           |
+| `skipBuild`    | `boolean` | forced `true` by the adapter | Stage the existing output dir; do not rebuild.                              |
 
 ### 4.5 Config resolution precedence
 
@@ -175,15 +175,15 @@ and is **idempotent**.
 
 `DeployResult` (the adapter's returned shape) fields:
 
-| Field | Type | Meaning |
-|---|---|---|
-| `capsule` | `string` | `storeId:rootHash` — the capsule identity a user shares. |
-| `storeId` | `string` | Store identity (64-hex). |
-| `root` | `string` | The new on-chain root (64-hex). |
-| `chiaUrl` | `string` | The user-facing content-open address `chia://<storeId>:<rootHash>/`. |
-| `digUrl` | `string` | **Deprecated** alias carrying the SAME `chia://` value as `chiaUrl` (never a `dig://` URL). |
-| `hubUrl` | `string` | The DIGHUb "view it" URL. |
-| `pushed` | `boolean?` | Whether the capsule was pushed to DIGHUb, when reported. |
+| Field     | Type       | Meaning                                                                                     |
+| --------- | ---------- | ------------------------------------------------------------------------------------------- |
+| `capsule` | `string`   | `storeId:rootHash` — the capsule identity a user shares.                                    |
+| `storeId` | `string`   | Store identity (64-hex).                                                                    |
+| `root`    | `string`   | The new on-chain root (64-hex).                                                             |
+| `chiaUrl` | `string`   | The user-facing content-open address `chia://<storeId>:<rootHash>/`.                        |
+| `digUrl`  | `string`   | **Deprecated** alias carrying the SAME `chia://` value as `chiaUrl` (never a `dig://` URL). |
+| `hubUrl`  | `string`   | The DIGHUb "view it" URL.                                                                   |
+| `pushed`  | `boolean?` | Whether the capsule was pushed to DIGHUb, when reported.                                    |
 
 Normalization rules:
 
@@ -211,22 +211,22 @@ stable machine `code`. Callers branch on `.code`, not the human message.
 
 A frozen, self-keyed catalogue (`key === value`). The `DigAdapterErrorCode` union is its value set.
 
-| Code | Meaning |
-|---|---|
-| `DIGSTORE_NOT_FOUND` | The `digstore` binary could not be spawned (not installed / not on PATH). |
-| `DEPLOY_FAILED` | `digstore deploy` exited non-zero (on-chain root advance / push failed). |
-| `DEPLOY_OUTPUT_UNPARSEABLE` | `digstore deploy --json` output could not be parsed into a capsule result. |
-| `INVALID_ARGUMENT` | An argument was malformed (e.g. non-hex store id, mutually-exclusive options). |
+| Code                        | Meaning                                                                        |
+| --------------------------- | ------------------------------------------------------------------------------ |
+| `DIGSTORE_NOT_FOUND`        | The `digstore` binary could not be spawned (not installed / not on PATH).      |
+| `DEPLOY_FAILED`             | `digstore deploy` exited non-zero (on-chain root advance / push failed).       |
+| `DEPLOY_OUTPUT_UNPARSEABLE` | `digstore deploy --json` output could not be parsed into a capsule result.     |
+| `INVALID_ARGUMENT`          | An argument was malformed (e.g. non-hex store id, mutually-exclusive options). |
 
 ### 6.2 `DigAdapterError`
 
-| Member | Type | Meaning |
-|---|---|---|
-| `name` | `"DigAdapterError"` | Constant. |
-| `code` | `DigAdapterErrorCode` | The stable machine code. |
-| `context` | `DigAdapterErrorContext` | Structured, code-specific detail (all fields optional; open-ended). |
-| `cause` | `unknown?` | The underlying error, when one was mapped. |
-| `toJSON()` | `{ code, message, context }` | JSON-friendly view for machines. |
+| Member     | Type                         | Meaning                                                             |
+| ---------- | ---------------------------- | ------------------------------------------------------------------- |
+| `name`     | `"DigAdapterError"`          | Constant.                                                           |
+| `code`     | `DigAdapterErrorCode`        | The stable machine code.                                            |
+| `context`  | `DigAdapterErrorContext`     | Structured, code-specific detail (all fields optional; open-ended). |
+| `cause`    | `unknown?`                   | The underlying error, when one was mapped.                          |
+| `toJSON()` | `{ code, message, context }` | JSON-friendly view for machines.                                    |
 
 `DigAdapterErrorContext` recognized fields (all optional): `bin` (string), `exitCode`
 (`number | null`), `value` (string), plus arbitrary additional keys.
@@ -265,15 +265,15 @@ is `"0.0.0-dev"`.
 
 ### 7.2 `capabilities(): PluginCapabilities`
 
-| Field | Value | Notes |
-|---|---|---|
-| `name` | `"@dignetwork/vite-plugin-dig"` / `"@dignetwork/next-plugin-dig"` | Package name. |
-| `version` | `= version()` | Build-injected semver. |
-| `framework` | `"vite"` / `"next"` | The framework targeted. |
-| `features` | `["dev-wallet-shim", "publish-deploy"]` | Advertised capabilities. |
-| `exportDir` | `"out"` | **next only** — the static-export dir. |
-| `errorCodes` | `Object.values(DIG_ADAPTER_ERROR_CODES)` | The stable error catalogue. |
-| `docs` | `"https://docs.dig.net/docs/audiences/app-developers"` | The verified app-developer docs landing. |
+| Field        | Value                                                             | Notes                                    |
+| ------------ | ----------------------------------------------------------------- | ---------------------------------------- |
+| `name`       | `"@dignetwork/vite-plugin-dig"` / `"@dignetwork/next-plugin-dig"` | Package name.                            |
+| `version`    | `= version()`                                                     | Build-injected semver.                   |
+| `framework`  | `"vite"` / `"next"`                                               | The framework targeted.                  |
+| `features`   | `["dev-wallet-shim", "publish-deploy"]`                           | Advertised capabilities.                 |
+| `exportDir`  | `"out"`                                                           | **next only** — the static-export dir.   |
+| `errorCodes` | `Object.values(DIG_ADAPTER_ERROR_CODES)`                          | The stable error catalogue.              |
+| `docs`       | `"https://docs.dig.net/docs/audiences/app-developers"`            | The verified app-developer docs landing. |
 
 The `docs` value MUST resolve to a live docs.dig.net route.
 

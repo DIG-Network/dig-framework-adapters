@@ -7,9 +7,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { version, capabilities } from "../dist/index.js";
 
-const pkg = JSON.parse(
-  readFileSync(new URL("../package.json", import.meta.url), "utf8"),
-);
+const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
 
 test("version(): matches package.json (build-time injected, never drifts)", () => {
   assert.equal(version(), pkg.version);

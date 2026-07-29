@@ -6,7 +6,7 @@ A **Vite plugin** that makes **DIG** a first-class deploy target. Build with Vit
 It does two things:
 
 1. **Dev wallet, for free.** During `vite dev` it injects the **`@dignetwork/dig-sdk`** `window.chia`
-   **dev shim** — the *same* injected-provider contract the SDK's `ChiaProvider` detects in
+   **dev shim** — the _same_ injected-provider contract the SDK's `ChiaProvider` detects in
    production — so you can develop the wallet path without the **DIG Browser** or an extension. The
    shim guards on a real wallet (the DIG Browser always wins) and never fakes a signature.
 2. **Publish to a capsule.** `digDeploy()` ships your **built** site to a DIG capsule via
@@ -48,8 +48,8 @@ message       = "deploy from vite"
 // package.json
 {
   "scripts": {
-    "deploy": "vite build && node -e \"import('@dignetwork/vite-plugin-dig').then(m=>m.digDeploy())\""
-  }
+    "deploy": "vite build && node -e \"import('@dignetwork/vite-plugin-dig').then(m=>m.digDeploy())\"",
+  },
 }
 ```
 
@@ -83,10 +83,10 @@ on-chain root, stage `dist/`, and push the new capsule. It returns:
 
 The Vite plugin. Add to `plugins`. Options:
 
-| Option | Type | Default | Meaning |
-|---|---|---|---|
-| `devWallet` | `boolean` | `true` | Inject the `window.chia` dev shim during `vite dev`. |
-| `devWalletOptions.address` | `string` | a clearly-fake dev address | The mock receive address the shim returns from `getAddress`. |
+| Option                     | Type      | Default                    | Meaning                                                      |
+| -------------------------- | --------- | -------------------------- | ------------------------------------------------------------ |
+| `devWallet`                | `boolean` | `true`                     | Inject the `window.chia` dev shim during `vite dev`.         |
+| `devWalletOptions.address` | `string`  | a clearly-fake dev address | The mock receive address the shim returns from `getAddress`. |
 
 The shim is only injected on the dev server (`apply: "serve"`) — never into a production build.
 
@@ -101,20 +101,20 @@ Deploy the built site. Call from a `publish` script after `vite build`. `options
 
 ```ts
 import { version, capabilities } from "@dignetwork/vite-plugin-dig";
-version();        // "0.1.0"
-capabilities();   // { name, version, framework: "vite", features: [...], errorCodes: [...], docs }
+version(); // "0.1.0"
+capabilities(); // { name, version, framework: "vite", features: [...], errorCodes: [...], docs }
 ```
 
 ## Error codes
 
 The publish path always throws a `DigAdapterError` with a stable `.code` — branch on the code:
 
-| Code | When |
-|---|---|
-| `DIGSTORE_NOT_FOUND` | `digstore` is not installed / not on `PATH`. |
-| `DEPLOY_FAILED` | `digstore deploy` exited non-zero (the on-chain advance / push failed). |
-| `DEPLOY_OUTPUT_UNPARSEABLE` | `digstore deploy --json` output couldn't be parsed into a capsule. |
-| `INVALID_ARGUMENT` | A malformed argument (e.g. a non-hex store id). |
+| Code                        | When                                                                    |
+| --------------------------- | ----------------------------------------------------------------------- |
+| `DIGSTORE_NOT_FOUND`        | `digstore` is not installed / not on `PATH`.                            |
+| `DEPLOY_FAILED`             | `digstore deploy` exited non-zero (the on-chain advance / push failed). |
+| `DEPLOY_OUTPUT_UNPARSEABLE` | `digstore deploy --json` output couldn't be parsed into a capsule.      |
+| `INVALID_ARGUMENT`          | A malformed argument (e.g. a non-hex store id).                         |
 
 ```ts
 import { digDeploy, isDigAdapterError } from "@dignetwork/vite-plugin-dig";
