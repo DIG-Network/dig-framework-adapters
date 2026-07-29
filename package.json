@@ -15,6 +15,7 @@
     "url": "https://github.com/DIG-Network/dig-framework-adapters/issues"
   },
   "workspaces": [
+    "packages/shared",
     "packages/*"
   ],
   "engines": {
