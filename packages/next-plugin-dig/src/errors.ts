@@ -6,8 +6,8 @@
 // from the `.d.ts` via the exported `DIG_ADAPTER_ERROR_CODES` const and the `DigAdapterErrorCode`
 // union. (We catalogue the codes HERE rather than re-export the SDK's, because the underlying
 // `@dignetwork/dig-sdk` deploy runner throws plain `Error`s in published versions — this plugin is
-// the layer that gives the publish step a stable code an agent can act on. See AGENT_FRIENDLY.md →
-// "Structured errors with a stable machine code".)
+// the layer that gives the publish step a stable code an agent can act on. See SPEC.md §6
+// "Error taxonomy".)
 
 /**
  * The stable error-code catalogue for the publish path. Each value is an UPPER_SNAKE symbolic string
