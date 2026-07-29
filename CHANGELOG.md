@@ -4,6 +4,11 @@ All notable changes to this project are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and
 [Conventional Commits](https://www.conventionalcommits.org).
 
+## [0.1.8] - 2026-07-29
+
+### Refactor
+- **adapters:** Extract byte-identical errors + deploy-result into a private shared pkg (#1811)
+
 ## [0.1.7] - 2026-07-29
 
 ### CI
