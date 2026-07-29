@@ -4,6 +4,11 @@ All notable changes to this project are documented here.
 This project adheres to [Semantic Versioning](https://semver.org) and
 [Conventional Commits](https://www.conventionalcommits.org).
 
+## [0.1.7] - 2026-07-29
+
+### CI
+- **adapters:** Add ESLint + Prettier §2.4a Format/Lint gates (#1810)
+
 ## [0.1.6] - 2026-07-22
 
 ### CI
