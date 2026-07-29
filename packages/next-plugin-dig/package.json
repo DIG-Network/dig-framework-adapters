@@ -55,6 +55,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "@dignetwork/dig-adapters-shared": "*",
     "@dignetwork/dig-sdk": "^0.2.0"
   },
   "peerDependencies": {

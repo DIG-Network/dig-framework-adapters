@@ -23,6 +23,10 @@ export default defineConfig({
   treeshake: true,
   splitting: false,
   external: ["@dignetwork/dig-sdk", "next"],
+  // The shared errors/deploy-result contract (@dignetwork/dig-adapters-shared) is a PRIVATE,
+  // unpublished workspace package — inline it into this package's own dist rather than leaving it
+  // an external `require`, so a consumer never needs to resolve it.
+  noExternal: ["@dignetwork/dig-adapters-shared"],
   define: {
     __PLUGIN_VERSION__: JSON.stringify(pkgVersion),
   },
