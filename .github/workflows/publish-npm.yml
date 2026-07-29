@@ -16,7 +16,7 @@ name: publish-npm
 # bump them before tagging.
 on:
   push:
-    tags: ['v*']
+    tags: ["v*"]
   release:
     types: [published]
   workflow_dispatch: {}

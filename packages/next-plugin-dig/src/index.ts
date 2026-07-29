@@ -71,8 +71,12 @@ export function digNextDevShimTag(options: DevShimOptions = {}): string {
   return `<script>${devShimScript(options)}</script>`;
 }
 
+// The empty extends-body below is deliberate: DigDeployOptions is a named, documented public type
+// that intentionally mirrors the SDK's RunDeployOptions verbatim today, kept as an interface (not a
+// type alias) so consumers can declaration-merge it and the public name stays stable if
+// adapter-specific options diverge later (SPEC.md §4.1). Hence the scoped no-empty-object-type off.
 /** Options for {@link digDeploy} — all {@link RunDeployOptions} (with `outputDir` defaulting to `out`). */
-export interface DigDeployOptions extends RunDeployOptions {}
+export interface DigDeployOptions extends RunDeployOptions {} // eslint-disable-line @typescript-eslint/no-empty-object-type
 
 /** Test/extension seam: the function {@link digDeploy} delegates the actual deploy to. */
 export interface DigDeployDeps {

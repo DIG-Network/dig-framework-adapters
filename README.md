@@ -6,15 +6,15 @@ take down — on **Chia**.
 
 This repo is a small monorepo with two published packages:
 
-| Package | What it is | Install |
-|---|---|---|
+| Package                                                              | What it is                                                                                                               | Install                                |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- |
 | [**`@dignetwork/vite-plugin-dig`**](packages/vite-plugin-dig#readme) | A Vite plugin: injects a `window.chia` dev wallet during `vite dev`, and ships your build to a DIG capsule on `publish`. | `npm i -D @dignetwork/vite-plugin-dig` |
-| [**`@dignetwork/next-plugin-dig`**](packages/next-plugin-dig#readme) | A Next.js **static-export** adapter: the same dev wallet shim + a `publish` step that ships `out/` to a DIG capsule. | `npm i -D @dignetwork/next-plugin-dig` |
+| [**`@dignetwork/next-plugin-dig`**](packages/next-plugin-dig#readme) | A Next.js **static-export** adapter: the same dev wallet shim + a `publish` step that ships `out/` to a DIG capsule.     | `npm i -D @dignetwork/next-plugin-dig` |
 
 Both do the same two things, the way each framework expects:
 
 1. **Dev wallet, for free.** During `dev` they inject the **`@dignetwork/dig-sdk`** `window.chia`
-   **dev shim** — the *same* injected-provider contract the SDK's `ChiaProvider` detects in
+   **dev shim** — the _same_ injected-provider contract the SDK's `ChiaProvider` detects in
    production — so you can build and exercise the wallet path locally without the **DIG Browser** or
    an extension. The shim guards on a real wallet (so the DIG Browser always wins) and refuses to
    fake a signature, so a dev is never misled.

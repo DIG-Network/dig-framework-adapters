@@ -7,7 +7,7 @@ deploy the static export to a DIG **capsule** — a network no host can read, ch
 It does two things:
 
 1. **Dev wallet, for free.** Helpers inject the **`@dignetwork/dig-sdk`** `window.chia` **dev shim**
-   into your app `<head>` during `next dev` — the *same* injected-provider contract the SDK's
+   into your app `<head>` during `next dev` — the _same_ injected-provider contract the SDK's
    `ChiaProvider` detects in production — so you can develop the wallet path without the **DIG
    Browser** or an extension. The shim guards on a real wallet (the DIG Browser always wins) and
    never fakes a signature.
@@ -47,7 +47,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head>
         {process.env.NODE_ENV !== "production" && (
-          <Script id="dig-dev-wallet" dangerouslySetInnerHTML={{ __html: digNextDevShimScript() }} />
+          <Script
+            id="dig-dev-wallet"
+            dangerouslySetInnerHTML={{ __html: digNextDevShimScript() }}
+          />
         )}
       </head>
       <body>{children}</body>
@@ -73,8 +76,8 @@ message    = "deploy from next"
 // package.json
 {
   "scripts": {
-    "deploy": "next build && node -e \"import('@dignetwork/next-plugin-dig').then(m=>m.digDeploy())\""
-  }
+    "deploy": "next build && node -e \"import('@dignetwork/next-plugin-dig').then(m=>m.digDeploy())\"",
+  },
 }
 ```
 
@@ -96,10 +99,10 @@ of the same chia:// value); `hubUrl` is the DIGHUb view page.
 
 ### Dev shim
 
-| Helper | Returns | Use |
-|---|---|---|
+| Helper                           | Returns                                            | Use                                                                |
+| -------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------ |
 | `digNextDevShimScript(options?)` | the eval-free script **body** (no `<script>` tags) | Next's `<Script dangerouslySetInnerHTML>` or a custom `_document`. |
-| `digNextDevShimTag(options?)` | a ready `<script>…</script>` string | raw HTML injection. |
+| `digNextDevShimTag(options?)`    | a ready `<script>…</script>` string                | raw HTML injection.                                                |
 
 `options.address` sets the mock receive address the shim returns. Always gate on
 `process.env.NODE_ENV !== "production"`.
@@ -116,20 +119,20 @@ Precedence is `options > DIGSTORE_* env > dig.toml > default`. On failure it thr
 
 ```ts
 import { version, capabilities } from "@dignetwork/next-plugin-dig";
-version();        // "0.1.0"
-capabilities();   // { name, version, framework: "next", exportDir: "out", features, errorCodes, docs }
+version(); // "0.1.0"
+capabilities(); // { name, version, framework: "next", exportDir: "out", features, errorCodes, docs }
 ```
 
 ## Error codes
 
 The publish path always throws a `DigAdapterError` with a stable `.code`:
 
-| Code | When |
-|---|---|
-| `DIGSTORE_NOT_FOUND` | `digstore` is not installed / not on `PATH`. |
-| `DEPLOY_FAILED` | `digstore deploy` exited non-zero. |
+| Code                        | When                                                               |
+| --------------------------- | ------------------------------------------------------------------ |
+| `DIGSTORE_NOT_FOUND`        | `digstore` is not installed / not on `PATH`.                       |
+| `DEPLOY_FAILED`             | `digstore deploy` exited non-zero.                                 |
 | `DEPLOY_OUTPUT_UNPARSEABLE` | `digstore deploy --json` output couldn't be parsed into a capsule. |
-| `INVALID_ARGUMENT` | A malformed argument. |
+| `INVALID_ARGUMENT`          | A malformed argument.                                              |
 
 ```ts
 import { digDeploy, isDigAdapterError } from "@dignetwork/next-plugin-dig";
