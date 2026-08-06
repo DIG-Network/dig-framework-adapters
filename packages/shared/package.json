@@ -1,6 +1,6 @@
 {
   "name": "@dignetwork/dig-adapters-shared",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "private": true,
   "description": "Internal, unpublished workspace package holding the error taxonomy and deploy-result normalization shared byte-for-byte by @dignetwork/vite-plugin-dig and @dignetwork/next-plugin-dig, so the machine-readable DIG_ADAPTER_ERROR_CODES contract can never drift between the two adapters. Not published to npm — each adapter's tsup build inlines this package into its own dist.",
   "license": "MIT",
