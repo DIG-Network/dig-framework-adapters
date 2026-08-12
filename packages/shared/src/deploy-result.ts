@@ -3,11 +3,10 @@
 // WHY this lives here: the user-facing "open this capsule" address is `chia://` (SYSTEM.md →
 // "Canonical terminology & branding" — the scheme the DIG Browser / extension register). The SDK's
 // `parseDeployResult` already emits `chiaUrl` (with `digUrl` kept as a deprecated alias of the SAME
-// chia:// value), but an OLDER published `@dignetwork/dig-sdk` may still hand back a `dig://` `digUrl`
-// and no `chiaUrl`. To guarantee the adapter NEVER returns a `dig://` open URL — and so its prose
-// ("prints the chia:// URL") is always backed by a real field — we normalize the runner's result on
-// the way out. The normalization is idempotent: a result the new SDK already normalized passes
-// through unchanged.
+// chia:// value). We still normalize the runner's result on the way out so the adapter's guarantee —
+// it NEVER returns a `dig://` open URL, and its prose ("prints the chia:// URL") is always backed by
+// a real field — holds on the adapter's OWN surface rather than depending on the SDK upholding it.
+// The normalization is idempotent: a result the SDK already normalized passes through unchanged.
 //
 // (Exempt — NOT touched here: the §21 remote-transport locator `dig://<host>/<store_id>` and the
 // `urn:dig:` namespace, which legitimately stay `dig://`.)
@@ -16,8 +15,8 @@ import type { DeployResult as SdkDeployResult } from "@dignetwork/dig-sdk/adapte
 
 /**
  * The adapter's deploy result. Extends the SDK's shape with the canonical {@link chiaUrl}
- * content-open field (the SDK adds it too; declared here so the adapter's surface carries it even
- * against an older published SDK that predates the field).
+ * content-open field (the SDK emits it too; declared here so the field is part of the adapter's own
+ * published contract, independent of the SDK's).
  */
 export interface DeployResult extends SdkDeployResult {
   /**
